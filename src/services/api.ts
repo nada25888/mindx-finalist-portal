@@ -8,7 +8,7 @@
  * UI can be previewed end-to-end. Demo data never leaves the visitor's browser.
  */
 
-export const API_BASE_URL: string = (import.meta.env.VITE_API_BASE_URL as string | undefined) ?? "";
+export const API_BASE_URL: string = (import.meta.env["VITE_API_BASE_URL"] as string | undefined) ?? "";
 export const IS_DEMO_MODE = API_BASE_URL === "";
 
 export const ENDPOINTS = {
@@ -254,9 +254,10 @@ export async function saveEvaluation(id: string, score: number, notes: string): 
   await delay(400);
   const list = readDemo();
   const idx = list.findIndex((s) => s.id === id);
-  if (idx === -1) throw new ApiError("المشاركة مش موجودة", 404);
+  const current = list[idx];
+  if (!current) throw new ApiError("المشاركة مش موجودة", 404);
   const updated: Submission = {
-    ...list[idx],
+    ...current,
     score,
     notes,
     status: "evaluated",
