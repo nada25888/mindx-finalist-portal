@@ -64,7 +64,7 @@ Build a complete, responsive Arabic (RTL) web application for the final stage of
 
 - Inputs for **البريد الإلكتروني / اسم المستخدم (Email/Username)** and **كلمة المرور (Password)** with an eye toggle ("إظهار الباسورد"), a full-width dark navy button "فتح اللوحة", and a "رجوع للرئيسية" link.
 
-- (Note: Keep authentication clean and ready to connect to an external backend API; allow demo login using `technology.sys.2026@gmail.com` / `technology@sys#2026` for frontend preview).
+- (Note: Keep authentication clean and ready to connect to an external backend API; 
 
 
 
