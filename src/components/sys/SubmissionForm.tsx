@@ -236,12 +236,12 @@ export function SubmissionForm() {
               <span className="h-px flex-1 bg-border" /> أو ضيف رابط المشروع <span className="h-px flex-1 bg-border" />
             </div>
             <div className="relative">
-              <Link2 className="pointer-events-none absolute end-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+              <Link2 className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
               <Input
                 dir="ltr"
                 type="url"
                 placeholder="https://drive.google.com/..."
-                className="font-num h-12 rounded-xl pe-10 text-start"
+                className="font-num h-12 rounded-xl pl-10 text-start"
                 aria-invalid={!!errors.projectLink}
                 {...register("projectLink")}
               />

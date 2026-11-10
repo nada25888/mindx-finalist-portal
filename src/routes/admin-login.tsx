@@ -74,14 +74,14 @@ function AdminLogin() {
               البريد الإلكتروني / اسم المستخدم
             </Label>
             <div className="relative">
-              <Mail className="pointer-events-none absolute start-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+              <Mail className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
               <Input
                 id="username"
                 dir="ltr"
                 autoComplete="username"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                className="font-num h-12 rounded-xl ps-10 text-end"
+                className="font-num h-12 rounded-xl pl-10 text-left"
                 placeholder="name@example.com"
               />
             </div>
@@ -92,7 +92,7 @@ function AdminLogin() {
               كلمة المرور
             </Label>
             <div className="relative">
-              <Lock className="pointer-events-none absolute start-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+              <Lock className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
               <Input
                 id="password"
                 dir="ltr"
@@ -100,13 +100,13 @@ function AdminLogin() {
                 autoComplete="current-password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="font-num h-12 rounded-xl px-10 text-end"
+                className="font-num h-12 rounded-xl px-10 text-left"
                 placeholder="••••••••"
               />
               <button
                 type="button"
                 onClick={() => setShow((s) => !s)}
-                className="absolute end-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-smooth hover:text-foreground"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-smooth hover:text-foreground"
                 aria-label={show ? "إخفاء الباسورد" : "إظهار الباسورد"}
               >
                 {show ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
