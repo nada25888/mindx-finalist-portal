@@ -34,7 +34,7 @@ Build a complete, responsive Arabic (RTL) web application for the final stage of
 
 - **Finalist Submission Form Card:** Elevated white card with clear validation for:
 
-  1. **كود المتأهل (Participant Code):** Required text input (e.g., `SYS@Youth#Summit26` or unique finalist code) to verify eligibility during sorting.
+  1. **كود المتأهل (Participant Code):** Required text input (e.g., `gyu2588` or unique finalist code) to verify eligibility during sorting.
 
   2. **الاسم بالكامل (Full Name):** Required Arabic full name input.
 
