@@ -38,7 +38,8 @@ export function useAdminTrigger() {
       const now = Date.now();
       const stored = JSON.parse(sessionStorage.getItem(RELOADS_KEY) ?? "[]") as number[];
       // Ignore duplicate effect runs in development (same load within 500ms).
-      if (stored.length && now - stored[stored.length - 1] < 500) return;
+      const last = stored[stored.length - 1];
+      if (last !== undefined && now - last < 500) return;
       const recent = [...countRecent(stored, now, RELOAD_WINDOW_MS), now];
       sessionStorage.setItem(RELOADS_KEY, JSON.stringify(recent));
       if (recent.length >= RELOADS_NEEDED) {
