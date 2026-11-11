@@ -14,7 +14,7 @@ export const IS_DEMO_MODE = API_BASE_URL === "";
 export const ENDPOINTS = {
   /** POST multipart/form-data: participantCode, fullName, phone, nationalId, projectLink?, file? → Submission */
   submit: "/api/finalists/submissions",
-  /** POST JSON { username, password } → { token, user: { name, email } } */
+  /** POST JSON { judgingCode, password } → { token, user: { name, judgingCode } } */
   login: "/api/auth/login",
   /** POST (Bearer) → 204 */
   logout: "/api/auth/logout",
@@ -58,7 +58,7 @@ export interface SubmissionInput {
 
 export interface AdminSession {
   token: string;
-  user: { name: string; email: string };
+  user: { name: string; judgingCode: string };
 }
 
 export class ApiError extends Error {
@@ -126,7 +126,7 @@ async function http<T>(path: string, init: RequestInit = {}, auth = false): Prom
 const DEMO_STORE_KEY = "sys_mindx_demo_submissions";
 const DEMO_FILE_LIMIT = 2 * 1024 * 1024; // keep previews small so localStorage doesn't overflow
 const DEMO_CREDENTIALS = {
-  email: "technology.sys.2026@gmail.com",
+  judgingCode: "SYS-JUDGE-2026",
   password: "technology@sys#2026",
 };
 
@@ -204,23 +204,38 @@ export async function submitFinalist(input: SubmissionInput): Promise<Submission
   return submission;
 }
 
-export async function login(username: string, password: string): Promise<AdminSession> {
+/** Judging codes: 4–32 characters, English letters, numbers and dashes only (case-insensitive). */
+const JUDGING_CODE_PATTERN = /^[A-Za-z0-9-]{4,32}$/;
+
+export function normalizeJudgingCode(code: string): string {
+  return code.trim().toUpperCase();
+}
+
+export function isValidJudgingCode(code: string): boolean {
+  return JUDGING_CODE_PATTERN.test(code.trim());
+}
+
+export async function login(judgingCode: string, password: string): Promise<AdminSession> {
+  const code = normalizeJudgingCode(judgingCode);
+  if (!isValidJudgingCode(code)) {
+    throw new ApiError("كود لجنة التحكيم غير صحيح", 400);
+  }
   if (!IS_DEMO_MODE) {
     const session = await http<AdminSession>(ENDPOINTS.login, {
       method: "POST",
-      body: JSON.stringify({ username, password }),
+      body: JSON.stringify({ judgingCode: code, password }),
     });
     setSession(session);
     return session;
   }
 
   await delay(700);
-  if (username.trim().toLowerCase() !== DEMO_CREDENTIALS.email || password !== DEMO_CREDENTIALS.password) {
+  if (code !== DEMO_CREDENTIALS.judgingCode || password !== DEMO_CREDENTIALS.password) {
     throw new ApiError("بيانات الدخول غير صحيحة", 401);
   }
   const session: AdminSession = {
     token: `demo-${crypto.randomUUID()}`,
-    user: { name: "لجنة الفرز والتحكيم", email: DEMO_CREDENTIALS.email },
+    user: { name: "لجنة الفرز والتحكيم", judgingCode: code },
   };
   setSession(session);
   return session;
