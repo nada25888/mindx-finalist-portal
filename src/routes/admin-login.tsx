@@ -1,12 +1,12 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { ArrowRight, Eye, EyeOff, Loader2, Lock, Mail, ShieldAlert } from "lucide-react";
+import { ArrowRight, Eye, EyeOff, KeyRound, Loader2, Lock, ShieldAlert } from "lucide-react";
 
 import { LogoBadge } from "@/components/sys/LogoBadge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ApiError, getSession, IS_DEMO_MODE, login } from "@/services/api";
+import { ApiError, getSession, IS_DEMO_MODE, isValidJudgingCode, login } from "@/services/api";
 
 export const Route = createFileRoute("/admin-login")({
   head: () => ({
@@ -25,7 +25,7 @@ export const Route = createFileRoute("/admin-login")({
 
 function AdminLogin() {
   const navigate = useNavigate();
-  const [username, setUsername] = useState("");
+  const [judgingCode, setJudgingCode] = useState("");
   const [password, setPassword] = useState("");
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -38,13 +38,17 @@ function AdminLogin() {
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setError(null);
-    if (!username.trim() || !password) {
-      setError("دخل البريد الإلكتروني وكلمة المرور");
+    if (!judgingCode.trim() || !password) {
+      setError("دخل كود لجنة التحكيم وكلمة المرور");
+      return;
+    }
+    if (!isValidJudgingCode(judgingCode)) {
+      setError("كود لجنة التحكيم لازم يكون حروف إنجليزي وأرقام وشرطات بس");
       return;
     }
     setLoading(true);
     try {
-      await login(username, password);
+      await login(judgingCode, password);
       navigate({ to: "/dashboard" });
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "تعذّر تسجيل الدخول، حاول تاني");
@@ -70,19 +74,22 @@ function AdminLogin() {
 
         <form onSubmit={onSubmit} noValidate className="mt-7 space-y-5">
           <div className="space-y-2">
-            <Label htmlFor="username" className="font-bold">
-              البريد الإلكتروني / اسم المستخدم
+            <Label htmlFor="judgingCode" className="font-bold">
+              كود لجنة التحكيم
             </Label>
             <div className="relative">
-              <Mail className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+              <KeyRound className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
               <Input
-                id="username"
+                id="judgingCode"
+                type="text"
                 dir="ltr"
                 autoComplete="username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                className="font-num h-12 rounded-xl pl-10 text-left"
-                placeholder="name@example.com"
+                autoCapitalize="characters"
+                spellCheck={false}
+                value={judgingCode}
+                onChange={(e) => setJudgingCode(e.target.value)}
+                className="font-num h-12 rounded-xl pl-10 text-left placeholder:text-right"
+                placeholder="أدخل كود المحكم"
               />
             </div>
           </div>

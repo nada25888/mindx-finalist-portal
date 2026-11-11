@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { isValidScore, submissionSchema, validateWorkFile } from "@/lib/validation";
+import { isValidJudgingCode, normalizeJudgingCode } from "@/services/api";
 import { countRecent, RELOAD_WINDOW_MS, RELOADS_NEEDED } from "@/hooks/use-admin-trigger";
 
 const base = {
@@ -55,5 +56,17 @@ describe("judging rules", () => {
     expect(RELOAD_WINDOW_MS).toBe(10_000);
     expect(countRecent([now - 9_000, now - 4_000], now, RELOAD_WINDOW_MS).length + 1).toBe(3);
     expect(countRecent([now - 11_000, now - 4_000], now, RELOAD_WINDOW_MS).length + 1).toBe(2);
+  });
+});
+
+describe("committee login", () => {
+  it("accepts a judging code instead of an email", () => {
+    expect(isValidJudgingCode("SYS-JUDGE-2026")).toBe(true);
+    expect(isValidJudgingCode("name@example.com")).toBe(false);
+    expect(isValidJudgingCode("ab")).toBe(false);
+  });
+
+  it("judging code is not case-sensitive and ignores spaces around it", () => {
+    expect(normalizeJudgingCode("  sys-judge-2026 ")).toBe("SYS-JUDGE-2026");
   });
 });
