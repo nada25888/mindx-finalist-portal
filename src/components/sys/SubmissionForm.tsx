@@ -122,7 +122,7 @@ export function SubmissionForm() {
             <Input
               id="participantCode"
               dir="ltr"
-              placeholder="SYS@Youth#Summit26"
+              placeholder="مثال: MX-2026-104"
               autoComplete="off"
               className="font-num h-12 rounded-xl text-start"
               aria-invalid={!!errors.participantCode}
